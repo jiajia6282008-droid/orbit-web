@@ -1,1 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>내 캐릭터 챗봇</title>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
+        #chat { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: auto; }
+        .user { color: blue; margin: 5px 0; }
+        .bot { color: green; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h2>내 캐릭터 챗봇</h2>
 
+    <div id="chat"></div>
+
+    <input id="input" type="text" placeholder="메시지를 입력하세요" style="width:80%;">
+    <button onclick="send()">보내기</button>
+
+    <script>
+        async function send() {
+            const msg = document.getElementById("input").value;
+            if (!msg) return;
+
+            document.getElementById("chat").innerHTML += `<div class='user'>나: ${msg}</div>`;
+
+            const res = await fetch("http://localhost:5000/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: msg })
+            });
+
+            const data = await res.json();
+            document.getElementById("chat").innerHTML += `<div class='bot'>AI: ${data.reply}</div>`;
+        }
+    </script>
+
+</body>
+</html>
